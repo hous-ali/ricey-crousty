@@ -52,7 +52,8 @@
   --popover: oklch(0.12 0.008 30);
   --popover-foreground: oklch(0.96 0.012 80);
 
-  --primary: oklch(0.62 0.226 27);              /* Brand red */
+  /* Premium deep red palette: #dc2626 / #991b1b / #ef4444 */
+  --primary: oklch(0.577 0.245 27.325);         /* #dc2626 */
   --primary-foreground: oklch(0.99 0 0);
 
   --secondary: oklch(0.18 0.01 30);
@@ -61,27 +62,27 @@
   --muted: oklch(0.17 0.008 30);
   --muted-foreground: oklch(0.68 0.025 70);
 
-  --accent: oklch(0.71 0.20 45);                /* Flame orange */
-  --accent-foreground: oklch(0.10 0 0);
+  --accent: oklch(0.637 0.237 25.331);          /* #ef4444 light red highlight */
+  --accent-foreground: oklch(0.99 0 0);
 
-  --destructive: oklch(0.62 0.226 27);
+  --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0 0);
 
   --border: oklch(0.22 0.01 30 / 60%);
   --input: oklch(0.22 0.01 30);
-  --ring: oklch(0.62 0.226 27 / 50%);
+  --ring: oklch(0.577 0.245 27.325 / 50%);
 
-  --brand: oklch(0.62 0.226 27);
+  --brand: oklch(0.577 0.245 27.325);
   --brand-foreground: oklch(0.99 0 0);
-  --flame: oklch(0.71 0.20 45);
-  --gold: oklch(0.82 0.17 85);
+  --flame: oklch(0.637 0.237 25.331);           /* #ef4444 */
+  --gold: oklch(0.505 0.213 27.518);            /* #991b1b dark red */
 
-  --gradient-flame: linear-gradient(135deg, oklch(0.62 0.226 27) 0%, oklch(0.71 0.20 45) 50%, oklch(0.82 0.17 85) 100%);
-  --gradient-radial-flame: radial-gradient(circle at 30% 20%, oklch(0.62 0.226 27 / 0.18), transparent 60%),
-                           radial-gradient(circle at 80% 80%, oklch(0.71 0.20 45 / 0.14), transparent 55%);
-  --shadow-flame: 0 20px 60px -20px oklch(0.62 0.226 27 / 0.55),
-                  0 0 0 1px oklch(0.71 0.20 45 / 0.2);
-  --shadow-glow: 0 0 40px oklch(0.71 0.20 45 / 0.35);
+  --gradient-flame: linear-gradient(135deg, oklch(0.505 0.213 27.518) 0%, oklch(0.577 0.245 27.325) 50%, oklch(0.637 0.237 25.331) 100%);
+  --gradient-radial-flame: radial-gradient(circle at 30% 20%, oklch(0.577 0.245 27.325 / 0.20), transparent 60%),
+                           radial-gradient(circle at 80% 80%, oklch(0.637 0.237 25.331 / 0.14), transparent 55%);
+  --shadow-flame: 0 20px 60px -20px oklch(0.577 0.245 27.325 / 0.60),
+                  0 0 0 1px oklch(0.637 0.237 25.331 / 0.25);
+  --shadow-glow: 0 0 40px oklch(0.637 0.237 25.331 / 0.40);
 }
 
 @layer base {
