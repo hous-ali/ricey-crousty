@@ -18,7 +18,7 @@ export function Footer() {
           </div>
           <p className="max-w-md text-sm text-muted-foreground">{t("footer.tag")}</p>
           <div className="flex items-center gap-2">
-            <a href="tel:+213549539046" className="flex h-10 w-10 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition hover:border-flame hover:text-flame">
+            <a href="tel:+213779862137" className="flex h-10 w-10 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition hover:border-flame hover:text-flame">
               <Phone className="h-4 w-4" />
             </a>
             <a href="https://wa.me/213779862137" target="_blank" rel="noreferrer" aria-label="WhatsApp" className="flex h-10 w-10 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition hover:border-flame hover:text-flame">
