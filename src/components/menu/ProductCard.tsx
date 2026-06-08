@@ -6,8 +6,8 @@ import { useI18n } from "@/contexts/I18nContext";
 
 const ACCENT: Record<NonNullable<Product["accent"]>, string> = {
   red: "from-primary/30 via-primary/10 to-transparent",
-  mint: "from-emerald-500/30 via-emerald-500/10 to-transparent",
-  purple: "from-purple-500/30 via-purple-500/10 to-transparent",
+  mint: "from-primary/25 via-primary/10 to-transparent",
+  purple: "from-flame/25 via-flame/10 to-transparent",
   orange: "from-flame/30 via-flame/10 to-transparent",
   gold: "from-gold/30 via-gold/10 to-transparent",
 };
@@ -23,58 +23,62 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
 
   return (
     <article
-      className="group relative isolate flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card/70 p-4 backdrop-blur-md transition-all duration-500 hover:-translate-y-1 hover:border-flame/40 hover:shadow-flame sm:p-5"
+      className="group relative isolate flex items-stretch gap-3 overflow-hidden rounded-3xl border border-border/60 bg-card/70 p-3 backdrop-blur-md transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-flame sm:gap-4 sm:p-4"
       style={{ animationDelay: `${(index % 8) * 60}ms` }}
     >
       <div className={`pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br ${ACCENT[accent]} opacity-60 transition-opacity duration-500 group-hover:opacity-100`} />
 
-      <div className="relative mb-4 flex h-44 items-center justify-center overflow-hidden rounded-2xl bg-background/40 sm:h-52">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,oklch(0.71_0.20_45_/_0.18),transparent_65%)]" />
+      {/* Vertical rectangular image on the left */}
+      <div className="relative h-36 w-28 shrink-0 overflow-hidden rounded-2xl bg-background/40 sm:h-44 sm:w-36">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,oklch(0.577_0.245_27.325_/_0.22),transparent_65%)]" />
         <img
           src={product.image}
           alt={product.name[lang]}
           loading="lazy"
           decoding="async"
-          className="relative h-full w-full object-contain p-2 transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-rotate-2"
+          className="relative h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
         />
       </div>
 
-      <div className="flex-1 min-w-0">
-        <h3 className="font-display text-2xl leading-tight tracking-wide text-foreground sm:text-3xl">
-          {product.name[lang]}
-        </h3>
-        {product.desc && (
-          <p className="mt-1.5 text-[12px] leading-snug text-muted-foreground line-clamp-2">
-            {product.desc[lang]}
-          </p>
-        )}
-      </div>
-
-      <div className="mt-4 flex items-end justify-between gap-3">
-        <div>
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Prix</div>
-          <div className="flex items-baseline gap-1">
-            <span className="font-display text-3xl text-gradient-flame sm:text-4xl">{product.price}</span>
-            <span className="text-xs font-bold text-flame">{t("currency")}</span>
-          </div>
+      {/* Right: text + price + plus */}
+      <div className="flex min-w-0 flex-1 flex-col justify-between py-1">
+        <div className="min-w-0">
+          <h3 className="font-display text-xl leading-tight tracking-wide text-foreground sm:text-2xl">
+            {product.name[lang]}
+          </h3>
+          {product.desc && (
+            <p className="mt-1 text-[12px] leading-snug text-muted-foreground line-clamp-2 sm:line-clamp-3">
+              {product.desc[lang]}
+            </p>
+          )}
         </div>
 
-        <button
-          onClick={onAdd}
-          aria-label={`Add ${product.name[lang]}`}
-          className="group/btn relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-flame text-accent-foreground shadow-flame transition-all duration-300 hover:scale-110 hover:rotate-90 active:scale-95 sm:h-16 sm:w-16"
-        >
-          <Plus className="h-7 w-7" strokeWidth={3} />
-          <span className="absolute inset-0 -z-10 rounded-2xl bg-flame opacity-40 blur-md group-hover/btn:opacity-70" />
-          {pop > 0 && (
-            <span
-              key={pop}
-              className="pointer-events-none absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-white text-flame text-xs font-black animate-pop-in"
-            >
-              +1
-            </span>
-          )}
-        </button>
+        <div className="mt-3 flex items-end justify-between gap-2">
+          <div>
+            <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Prix</div>
+            <div className="flex items-baseline gap-1">
+              <span className="font-display text-2xl text-gradient-flame sm:text-3xl">{product.price}</span>
+              <span className="text-xs font-bold text-primary">{t("currency")}</span>
+            </div>
+          </div>
+
+          <button
+            onClick={onAdd}
+            aria-label={`Add ${product.name[lang]}`}
+            className="group/btn relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-flame text-primary-foreground shadow-flame transition-all duration-300 hover:scale-110 hover:rotate-90 active:scale-95 sm:h-14 sm:w-14"
+          >
+            <Plus className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={3} />
+            <span className="absolute inset-0 -z-10 rounded-2xl bg-flame opacity-50 blur-md group-hover/btn:opacity-80" />
+            {pop > 0 && (
+              <span
+                key={pop}
+                className="pointer-events-none absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-white text-primary text-xs font-black animate-pop-in"
+              >
+                +1
+              </span>
+            )}
+          </button>
+        </div>
       </div>
     </article>
   );
