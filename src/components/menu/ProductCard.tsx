@@ -28,15 +28,15 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
     >
       <div className={`pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br ${ACCENT[accent]} opacity-60 transition-opacity duration-500 group-hover:opacity-100`} />
 
-      {/* Vertical rectangular image on the left */}
-      <div className="relative h-36 w-28 shrink-0 overflow-hidden rounded-2xl bg-background/40 sm:h-44 sm:w-36">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,oklch(0.577_0.245_27.325_/_0.22),transparent_65%)]" />
+      {/* Transparent PNG centered on the left */}
+      <div className="relative grid h-40 w-32 shrink-0 place-items-center rounded-2xl sm:h-48 sm:w-40">
+        <div className="absolute inset-2 rounded-full bg-[radial-gradient(circle_at_center,oklch(0.577_0.245_27.325_/_0.28),transparent_70%)] blur-xl" />
         <img
           src={product.image}
           alt={product.name[lang]}
           loading="lazy"
           decoding="async"
-          className="relative h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          className="relative h-full w-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.45)] transition-transform duration-700 ease-out group-hover:scale-110"
         />
       </div>
 
