@@ -97,6 +97,6 @@ export const CATEGORIES: { id: Category | "all"; label: { fr: string; ar: string
 ];
 
 export const DELIVERY_FEE = 200;
-export const WHATSAPP_NUMBER = "213549539046"; // +213 549 53 90 46
+export const WHATSAPP_NUMBER = "213779862137"; // +213 779 86 21 37
 export const MAPS_LINK = "https://maps.app.goo.gl/WAyzzjRJkHN8nH3n8";
 export const MAPS_EMBED_QUERY = "Ricey Crousty Tiaret";
