@@ -42,7 +42,7 @@ export function Hero() {
               <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
             </a>
             <a
-              href="tel:+213549539046"
+              href="tel:+213779862137"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-bold text-foreground backdrop-blur transition hover:border-flame"
             >
               <Phone className="h-4 w-4" />

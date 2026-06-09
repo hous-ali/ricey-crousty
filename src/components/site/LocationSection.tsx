@@ -48,14 +48,14 @@ export function LocationSection() {
               </a>
             </div>
             <a
-              href="tel:+213549539046"
+              href="tel:+213779862137"
               className="flex items-center justify-between rounded-3xl border border-border/60 bg-card/70 p-6 backdrop-blur-md transition hover:border-flame"
             >
               <div>
                 <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                   {t("loc.call")}
                 </div>
-                <div className="mt-1 font-display text-xl tracking-wider text-foreground">0549 53 90 46</div>
+                <div className="mt-1 font-display text-xl tracking-wider text-foreground">0779 86 21 37</div>
               </div>
               <Phone className="h-5 w-5 text-flame" />
             </a>
