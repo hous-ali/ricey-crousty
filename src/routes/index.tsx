@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { I18nProvider } from "@/contexts/I18nContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { Header } from "@/components/site/Header";
@@ -10,6 +11,8 @@ import { LocationSection } from "@/components/site/LocationSection";
 import { Footer } from "@/components/site/Footer";
 import { FloatingCart } from "@/components/cart/FloatingCart";
 import { CartSheet } from "@/components/cart/CartSheet";
+import { ClosedScreen } from "@/components/site/ClosedScreen";
+import { isRestaurantOpen } from "@/lib/hours";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +33,18 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const [open, setOpen] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const check = () => setOpen(isRestaurantOpen());
+    check();
+    const id = setInterval(check, 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (open === null) return null;
+  if (!open) return <ClosedScreen />;
+
   return (
     <I18nProvider>
       <CartProvider>
