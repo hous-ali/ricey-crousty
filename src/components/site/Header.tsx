@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Flame, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
+import logoAsset from "@/assets/ricey-crousty-logo.jpg.asset.json";
 import { useI18n } from "@/contexts/I18nContext";
 import { useCart } from "@/contexts/CartContext";
 import { LanguageToggle } from "./LanguageToggle";
@@ -31,9 +32,9 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4">
         <a href="#top" className="group flex items-center gap-2">
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-flame shadow-flame">
-            <Flame className="h-5 w-5 text-white" strokeWidth={2.5} />
-            <span className="absolute inset-0 rounded-xl ring-2 ring-flame/40 animate-ping-soft" />
+          <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full shadow-flame sm:h-11 sm:w-11">
+            <img src={logoAsset.url} alt="Ricey Crousty logo" className="h-full w-full object-cover" />
+            <span className="absolute inset-0 rounded-full ring-2 ring-flame/40 animate-ping-soft" />
           </span>
           <span className="flex flex-col leading-none">
             <span className="font-display text-xl tracking-wider text-foreground">RICEY</span>
