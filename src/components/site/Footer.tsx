@@ -1,4 +1,5 @@
-import { Flame, Instagram, Phone } from "lucide-react";
+import { Instagram, Phone } from "lucide-react";
+import logoAsset from "@/assets/ricey-crousty-logo.jpg.asset.json";
 import { useI18n } from "@/contexts/I18nContext";
 
 export function Footer() {
@@ -8,8 +9,8 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col items-center gap-6 text-center">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-flame shadow-flame">
-              <Flame className="h-5 w-5 text-white" strokeWidth={2.5} />
+            <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full shadow-flame">
+              <img src={logoAsset.url} alt="Ricey Crousty logo" className="h-full w-full object-cover" />
             </span>
             <span className="flex flex-col leading-none">
               <span className="font-display text-2xl tracking-wider text-foreground">RICEY CROUSTY</span>
