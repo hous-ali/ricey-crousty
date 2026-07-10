@@ -23,7 +23,7 @@ function Banners() {
     if (error) return toast.error(error.message);
     setFr(""); setAr(""); qc.invalidateQueries({ queryKey: qk.banners });
   };
-  const patch = async (id: string, p: Record<string, unknown>) => {
+  const patch = async (id: string, p: { is_active?: boolean; message_fr?: string; message_ar?: string }) => {
     await supabase.from("banners").update(p).eq("id", id);
     qc.invalidateQueries({ queryKey: qk.banners });
   };
