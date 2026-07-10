@@ -5,7 +5,8 @@ import { supabase } from "@/integrations/supabase/client";
 import logoAsset from "@/assets/ricey-crousty-logo.jpg.asset.json";
 import { useQueryClient } from "@tanstack/react-query";
 
-const nav = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const nav: NavItem[] = [
   { to: "/admin", label: "Tableau de bord", icon: LayoutDashboard, exact: true },
   { to: "/admin/menu", label: "Menu", icon: UtensilsCrossed },
   { to: "/admin/categories", label: "Catégories", icon: Layers },
@@ -13,7 +14,7 @@ const nav = [
   { to: "/admin/banners", label: "Bannières", icon: Megaphone },
   { to: "/admin/orders", label: "Commandes", icon: ShoppingBag },
   { to: "/admin/settings", label: "Paramètres", icon: Settings },
-] as const;
+];
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
