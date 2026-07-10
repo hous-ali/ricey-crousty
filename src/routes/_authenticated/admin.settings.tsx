@@ -35,11 +35,17 @@ function SettingsPage() {
   };
 
   const save = async () => {
+    const d = draft as Record<string, any>;
     const { error } = await supabase.from("site_settings").update({
-      name: draft.name, logo_url: draft.logo_url, whatsapp: draft.whatsapp,
-      delivery_fee: Number(draft.delivery_fee) || 0,
-      instagram_url: draft.instagram_url, maps_url: draft.maps_url,
-      hours: draft.hours, texts: draft.texts, closed_override: !!draft.closed_override,
+      name: String(d.name ?? ""),
+      logo_url: d.logo_url ?? null,
+      whatsapp: String(d.whatsapp ?? ""),
+      delivery_fee: Number(d.delivery_fee) || 0,
+      instagram_url: d.instagram_url ?? null,
+      maps_url: d.maps_url ?? null,
+      hours: d.hours ?? {},
+      texts: d.texts ?? {},
+      closed_override: !!d.closed_override,
     }).eq("id", 1);
     if (error) return toast.error(error.message);
     toast.success("Paramètres enregistrés");
