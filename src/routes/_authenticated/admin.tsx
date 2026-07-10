@@ -1,0 +1,61 @@
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { AdminShell } from "@/components/admin/AdminShell";
+import { useRealtimeInvalidation } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+
+export const Route = createFileRoute("/_authenticated/admin")({
+  component: AdminLayout,
+});
+
+function AdminLayout() {
+  useRealtimeInvalidation();
+  const [state, setState] = useState<"loading" | "ok" | "no-admin">("loading");
+
+  useEffect(() => {
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) { setState("no-admin"); return; }
+      const { data } = await supabase
+        .from("user_roles").select("role")
+        .eq("user_id", u.user.id).eq("role", "admin").maybeSingle();
+      setState(data ? "ok" : "no-admin");
+    })();
+  }, []);
+
+  if (state === "loading") {
+    return <div className="grid min-h-screen place-items-center bg-background text-muted-foreground">Chargement…</div>;
+  }
+
+  if (state === "no-admin") {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background p-6">
+        <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card/60 p-8 text-center backdrop-blur-xl">
+          <h1 className="font-display text-2xl tracking-wider">Accès restreint</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Votre compte n'a pas le rôle administrateur. Si vous êtes le propriétaire du restaurant et venez de créer votre compte, cliquez ci-dessous pour l'activer.
+          </p>
+          <Button
+            className="mt-6 w-full"
+            onClick={async () => {
+              const { data, error } = await supabase.rpc("claim_admin_bootstrap");
+              if (error) return toast.error(error.message);
+              if (data) { toast.success("Rôle admin activé"); location.reload(); }
+              else toast.error("Un administrateur existe déjà. Contactez-le pour obtenir l'accès.");
+            }}
+          >
+            Activer le rôle administrateur
+          </Button>
+          <button
+            onClick={async () => { await supabase.auth.signOut(); location.href = "/auth"; }}
+            className="mt-3 text-xs text-muted-foreground underline underline-offset-4"
+          >Se déconnecter</button>
+        </div>
+      </div>
+    );
+  }
+
+  return <AdminShell><Outlet /></AdminShell>;
+}
