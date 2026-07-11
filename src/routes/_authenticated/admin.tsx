@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { useRealtimeInvalidation } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
@@ -35,22 +33,11 @@ function AdminLayout() {
         <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card/60 p-8 text-center backdrop-blur-xl">
           <h1 className="font-display text-2xl tracking-wider">Accès restreint</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Votre compte n'a pas le rôle administrateur. Si vous êtes le propriétaire du restaurant et venez de créer votre compte, cliquez ci-dessous pour l'activer.
+            Votre compte n'a pas le rôle administrateur.
           </p>
-          <Button
-            className="mt-6 w-full"
-            onClick={async () => {
-              const { data, error } = await supabase.rpc("claim_admin_bootstrap");
-              if (error) return toast.error(error.message);
-              if (data) { toast.success("Rôle admin activé"); location.reload(); }
-              else toast.error("Un administrateur existe déjà. Contactez-le pour obtenir l'accès.");
-            }}
-          >
-            Activer le rôle administrateur
-          </Button>
           <button
             onClick={async () => { await supabase.auth.signOut(); location.href = "/auth"; }}
-            className="mt-3 text-xs text-muted-foreground underline underline-offset-4"
+            className="mt-6 text-xs text-muted-foreground underline underline-offset-4"
           >Se déconnecter</button>
         </div>
       </div>

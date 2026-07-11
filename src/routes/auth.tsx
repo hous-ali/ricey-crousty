@@ -10,6 +10,9 @@ import logoAsset from "@/assets/ricey-crousty-logo.jpg.asset.json";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 
+const ADMIN_USERNAME = "admin";
+const ADMIN_EMAIL = "admin@riceycrousty.local";
+
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   head: () => ({
@@ -25,8 +28,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const nav = useNavigate();
   const { redirect } = useSearch({ from: "/auth" });
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -40,20 +42,15 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        toast.success("Connecté");
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email, password,
-          options: { emailRedirectTo: window.location.origin + "/admin" },
-        });
-        if (error) throw error;
-        toast.success("Compte créé");
-        // First admin bootstrap
-        await supabase.rpc("claim_admin_bootstrap");
+      if (username.trim().toLowerCase() !== ADMIN_USERNAME) {
+        throw new Error("Identifiants invalides");
       }
+      const { error } = await supabase.auth.signInWithPassword({
+        email: ADMIN_EMAIL,
+        password,
+      });
+      if (error) throw new Error("Identifiants invalides");
+      toast.success("Connecté");
       nav({ to: redirect ?? "/admin" });
     } catch (err) {
       toast.error((err as Error).message || "Erreur");
@@ -72,22 +69,17 @@ function AuthPage() {
         </div>
         <form onSubmit={submit} className="space-y-4">
           <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Label htmlFor="username">Nom d'utilisateur</Label>
+            <Input id="username" type="text" autoComplete="username" required value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
           <div>
             <Label htmlFor="password">Mot de passe</Label>
-            <Input id="password" type="password" autoComplete={mode === "signin" ? "current-password" : "new-password"} required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input id="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <Button type="submit" className="w-full" disabled={busy}>
-            {busy ? "..." : mode === "signin" ? "Se connecter" : "Créer un compte"}
+            {busy ? "..." : "Se connecter"}
           </Button>
         </form>
-        <div className="mt-4 text-center text-xs text-muted-foreground">
-          <button className="underline underline-offset-4 hover:text-foreground" onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
-            {mode === "signin" ? "Première fois ? Créer le compte admin" : "Déjà un compte ? Se connecter"}
-          </button>
-        </div>
         <div className="mt-6 text-center text-xs">
           <Link to="/" className="text-muted-foreground hover:text-foreground">← Retour au site</Link>
         </div>
