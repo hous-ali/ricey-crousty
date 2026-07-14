@@ -10,8 +10,8 @@ import logoAsset from "@/assets/ricey-crousty-logo.jpg.asset.json";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 
-const ADMIN_USERNAME = "admin";
-const ADMIN_EMAIL = "admin@riceycrousty.local";
+
+
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const nav = useNavigate();
   const { redirect } = useSearch({ from: "/auth" });
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -42,18 +42,15 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      if (username.trim().toLowerCase() !== ADMIN_USERNAME) {
-        throw new Error("Identifiants invalides");
-      }
       const { error } = await supabase.auth.signInWithPassword({
-        email: ADMIN_EMAIL,
+        email: email.trim(),
         password,
       });
-      if (error) throw new Error("Identifiants invalides");
+      if (error) throw error;
       toast.success("Connecté");
       nav({ to: redirect ?? "/admin" });
     } catch (err) {
-      toast.error((err as Error).message || "Erreur");
+      toast.error((err as Error).message || "Identifiants invalides");
     } finally {
       setBusy(false);
     }
@@ -69,8 +66,8 @@ function AuthPage() {
         </div>
         <form onSubmit={submit} className="space-y-4">
           <div>
-            <Label htmlFor="username">Nom d'utilisateur</Label>
-            <Input id="username" type="text" autoComplete="username" required value={username} onChange={(e) => setUsername(e.target.value)} />
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div>
             <Label htmlFor="password">Mot de passe</Label>
@@ -87,3 +84,4 @@ function AuthPage() {
     </div>
   );
 }
+
