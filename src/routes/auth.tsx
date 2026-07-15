@@ -1,7 +1,10 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
+import { getAdminSetupStatus } from "@/lib/admin-setup.functions";
+import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,15 +31,24 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const nav = useNavigate();
   const { redirect } = useSearch({ from: "/auth" });
+  const setupStatusFn = useServerFn(getAdminSetupStatus);
+  const { data: setupStatus } = useQuery({
+    queryKey: ["admin-setup-status"],
+    queryFn: () => setupStatusFn(),
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    if (setupStatus?.configured && setupStatus.adminCount === 0) {
+      nav({ to: "/setup" });
+      return;
+    }
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) nav({ to: redirect ?? "/admin" });
     });
-  }, [nav, redirect]);
+  }, [nav, redirect, setupStatus]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
