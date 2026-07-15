@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { storageUrl } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";

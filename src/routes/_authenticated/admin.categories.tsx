@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { categoriesQuery, qk, type Category } from "@/lib/data";
 import { Sortable } from "@/components/admin/Sortable";
 import { Button } from "@/components/ui/button";

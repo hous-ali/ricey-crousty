@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabaseUrl, supabase } from "@/lib/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 export type Category = Tables<"categories">;
@@ -105,7 +105,7 @@ export const ordersQuery = queryOptions({
 
 // Public storage URL helper (private buckets are readable via policy).
 export function storageUrl(bucket: string, path: string): string {
-  const base = import.meta.env.VITE_SUPABASE_URL as string;
+  const base = getSupabaseUrl();
   return `${base}/storage/v1/object/public/${bucket}/${path}`;
 }
 
