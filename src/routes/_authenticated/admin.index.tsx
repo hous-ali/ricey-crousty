@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ordersQuery, productsQuery, settingsQuery, isOpenByHours, type HoursMap } from "@/lib/data";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 

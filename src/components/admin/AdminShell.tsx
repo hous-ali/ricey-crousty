@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { LayoutDashboard, UtensilsCrossed, Layers, Images, Megaphone, ShoppingBag, Settings, LogOut, ExternalLink, Menu } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import logoAsset from "@/assets/ricey-crousty-logo.jpg.asset.json";
 import { useQueryClient } from "@tanstack/react-query";
 

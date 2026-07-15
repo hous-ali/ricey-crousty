@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { useRealtimeInvalidation } from "@/hooks/use-auth";
 
