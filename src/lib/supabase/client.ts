@@ -9,12 +9,6 @@ type RuntimeSupabaseConfig = {
   projectId?: string;
 };
 
-declare global {
-  interface Window {
-    __RICEY_SUPABASE_CONFIG__?: RuntimeSupabaseConfig;
-  }
-}
-
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
 }
@@ -63,8 +57,11 @@ function assertNewProject(config: RuntimeSupabaseConfig) {
 }
 
 export function getSupabaseRuntimeConfig(): RuntimeSupabaseConfig {
-  if (typeof window !== "undefined" && window.__RICEY_SUPABASE_CONFIG__) {
-    const config = window.__RICEY_SUPABASE_CONFIG__;
+  const runtimeWindow = typeof window === "undefined"
+    ? undefined
+    : (window as Window & { __RICEY_SUPABASE_CONFIG__?: RuntimeSupabaseConfig });
+  if (runtimeWindow?.__RICEY_SUPABASE_CONFIG__) {
+    const config = runtimeWindow.__RICEY_SUPABASE_CONFIG__;
     assertNewProject(config);
     return config;
   }
