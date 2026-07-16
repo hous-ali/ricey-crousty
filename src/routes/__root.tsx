@@ -27,8 +27,11 @@ function firstUsableValue(...values: Array<string | undefined>): string {
 }
 
 function getRuntimeSupabaseConfigScript() {
-  if (typeof window !== "undefined" && window.__RICEY_SUPABASE_CONFIG__) {
-    return `window.__RICEY_SUPABASE_CONFIG__=${JSON.stringify(window.__RICEY_SUPABASE_CONFIG__)};`;
+  const runtimeWindow = typeof window === "undefined"
+    ? undefined
+    : (window as Window & { __RICEY_SUPABASE_CONFIG__?: { url: string; publishableKey: string; projectId?: string } });
+  if (runtimeWindow?.__RICEY_SUPABASE_CONFIG__) {
+    return `window.__RICEY_SUPABASE_CONFIG__=${JSON.stringify(runtimeWindow.__RICEY_SUPABASE_CONFIG__)};`;
   }
 
   const env = typeof process === "undefined" ? {} : process.env;
