@@ -12,11 +12,41 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
+const OLD_PROJECT_REF = "niejysnlgbnhyxyvgddc";
+
+type RuntimeSupabaseConfig = {
+  url: string;
+  publishableKey: string;
+  projectId: string;
+};
+
+declare global {
+  interface Window {
+    __RICEY_SUPABASE_CONFIG__?: RuntimeSupabaseConfig;
+  }
+}
+
+function inferSupabaseProjectId(url: string): string {
+  return url.match(/^https:\/\/([a-z0-9]+)\.supabase\.co/i)?.[1] ?? "";
+}
+
+function isOldSupabaseUrl(url: string): boolean {
+  return url.includes(OLD_PROJECT_REF);
+}
+
+function firstUsableValue(...values: Array<string | undefined>): string {
+  return values.find((value) => value && !isOldSupabaseUrl(value)) ?? "";
+}
+
 function getRuntimeSupabaseConfigScript() {
+  if (typeof window !== "undefined" && window.__RICEY_SUPABASE_CONFIG__) {
+    return `window.__RICEY_SUPABASE_CONFIG__=${JSON.stringify(window.__RICEY_SUPABASE_CONFIG__)};`;
+  }
+
   const env = typeof process === "undefined" ? {} : process.env;
-  const url = env.BYO_SUPABASE_URL || env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || "";
+  const url = firstUsableValue(env.BYO_SUPABASE_URL, env.SUPABASE_URL, import.meta.env.VITE_SUPABASE_URL);
   const publishableKey = env.BYO_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
-  const projectId = env.BYO_SUPABASE_PROJECT_ID || env.SUPABASE_PROJECT_ID || import.meta.env.VITE_SUPABASE_PROJECT_ID || url.match(/^https:\/\/([a-z0-9]+)\.supabase\.co/i)?.[1] || "";
+  const projectId = firstUsableValue(env.BYO_SUPABASE_PROJECT_ID, env.SUPABASE_PROJECT_ID, import.meta.env.VITE_SUPABASE_PROJECT_ID) || inferSupabaseProjectId(url);
 
   return `window.__RICEY_SUPABASE_CONFIG__=${JSON.stringify({ url, publishableKey, projectId })};`;
 }
@@ -120,7 +150,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <script dangerouslySetInnerHTML={{ __html: getRuntimeSupabaseConfigScript() }} />
+        <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: getRuntimeSupabaseConfigScript() }} />
         {children}
         <Scripts />
       </body>
