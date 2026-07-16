@@ -13,6 +13,18 @@ import logoAsset from "@/assets/ricey-crousty-logo.jpg.asset.json";
 
 const searchSchema = z.object({ redirect: z.string().optional() });
 
+function safeRedirectPath(value: string | undefined): "/admin" | string {
+  if (!value) return "/admin";
+  try {
+    const url = value.startsWith("http") ? new URL(value) : new URL(value, window.location.origin);
+    if (url.origin !== window.location.origin) return "/admin";
+    if (!url.pathname.startsWith("/admin")) return "/admin";
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return "/admin";
+  }
+}
+
 
 
 
@@ -46,7 +58,7 @@ function AuthPage() {
       return;
     }
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) nav({ to: redirect ?? "/admin" });
+      if (data.session) nav({ to: safeRedirectPath(redirect) });
     });
   }, [nav, redirect, setupStatus]);
 
@@ -60,7 +72,7 @@ function AuthPage() {
       });
       if (error) throw error;
       toast.success("Connecté");
-      nav({ to: redirect ?? "/admin" });
+      nav({ to: safeRedirectPath(redirect) });
     } catch (err) {
       toast.error((err as Error).message || "Identifiants invalides");
     } finally {

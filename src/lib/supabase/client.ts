@@ -9,12 +9,6 @@ type RuntimeSupabaseConfig = {
   projectId?: string;
 };
 
-declare global {
-  interface Window {
-    __RICEY_SUPABASE_CONFIG__?: RuntimeSupabaseConfig;
-  }
-}
-
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
 }
@@ -47,6 +41,14 @@ function inferProjectId(url: string): string | undefined {
   return url.match(/^https:\/\/([a-z0-9]+)\.supabase\.co/i)?.[1];
 }
 
+function isOldProjectValue(value: string | undefined): boolean {
+  return !!value && value.includes(OLD_PROJECT_REF);
+}
+
+function firstUsableValue(...values: Array<string | undefined>): string | undefined {
+  return values.find((value) => value && !isOldProjectValue(value));
+}
+
 function assertNewProject(config: RuntimeSupabaseConfig) {
   const projectId = config.projectId || inferProjectId(config.url);
   if (projectId === OLD_PROJECT_REF || config.url.includes(OLD_PROJECT_REF)) {
@@ -55,16 +57,19 @@ function assertNewProject(config: RuntimeSupabaseConfig) {
 }
 
 export function getSupabaseRuntimeConfig(): RuntimeSupabaseConfig {
-  if (typeof window !== "undefined" && window.__RICEY_SUPABASE_CONFIG__) {
-    const config = window.__RICEY_SUPABASE_CONFIG__;
+  const runtimeWindow = typeof window === "undefined"
+    ? undefined
+    : (window as Window & { __RICEY_SUPABASE_CONFIG__?: RuntimeSupabaseConfig });
+  if (runtimeWindow?.__RICEY_SUPABASE_CONFIG__) {
+    const config = runtimeWindow.__RICEY_SUPABASE_CONFIG__;
     assertNewProject(config);
     return config;
   }
 
   const env = getProcessEnv();
-  const url = env.BYO_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || env.SUPABASE_URL;
+  const url = firstUsableValue(env.BYO_SUPABASE_URL, env.SUPABASE_URL, import.meta.env.VITE_SUPABASE_URL);
   const publishableKey = env.BYO_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY;
-  const projectId = env.BYO_SUPABASE_PROJECT_ID || import.meta.env.VITE_SUPABASE_PROJECT_ID || env.SUPABASE_PROJECT_ID || (url ? inferProjectId(url) : undefined);
+  const projectId = firstUsableValue(env.BYO_SUPABASE_PROJECT_ID, env.SUPABASE_PROJECT_ID, import.meta.env.VITE_SUPABASE_PROJECT_ID) || (url ? inferProjectId(url) : undefined);
 
   if (!url || !publishableKey) {
     throw new Error("Missing Supabase URL or publishable key. Add the new project configuration before signing in.");

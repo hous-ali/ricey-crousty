@@ -36,11 +36,19 @@ function inferProjectId(url: string): string | null {
   return url.match(/^https:\/\/([a-z0-9]+)\.supabase\.co/i)?.[1] ?? null;
 }
 
+function isOldProjectValue(value: string | undefined): boolean {
+  return !!value && value.includes(OLD_PROJECT_REF);
+}
+
+function firstUsableValue(...values: Array<string | undefined>): string {
+  return values.find((value) => value && !isOldProjectValue(value)) ?? "";
+}
+
 function getConfig() {
-  const url = process.env.BYO_SUPABASE_URL || process.env.SUPABASE_URL || "";
+  const url = firstUsableValue(process.env.BYO_SUPABASE_URL, process.env.SUPABASE_URL);
   const publishableKey = process.env.BYO_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || "";
   const serviceRoleKey = process.env.BYO_SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-  const projectId = process.env.BYO_SUPABASE_PROJECT_ID || process.env.SUPABASE_PROJECT_ID || inferProjectId(url);
+  const projectId = firstUsableValue(process.env.BYO_SUPABASE_PROJECT_ID, process.env.SUPABASE_PROJECT_ID) || inferProjectId(url);
   return { url, publishableKey, serviceRoleKey, projectId };
 }
 
