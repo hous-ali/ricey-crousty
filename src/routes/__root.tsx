@@ -14,18 +14,6 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 const OLD_PROJECT_REF = "niejysnlgbnhyxyvgddc";
 
-type RuntimeSupabaseConfig = {
-  url: string;
-  publishableKey: string;
-  projectId: string;
-};
-
-declare global {
-  interface Window {
-    __RICEY_SUPABASE_CONFIG__?: RuntimeSupabaseConfig;
-  }
-}
-
 function inferSupabaseProjectId(url: string): string {
   return url.match(/^https:\/\/([a-z0-9]+)\.supabase\.co/i)?.[1] ?? "";
 }
